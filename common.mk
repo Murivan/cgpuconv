@@ -38,7 +38,7 @@ OSARCH= $(shell uname -m)
 # (override directories only if they are not already defined)
 SRCDIR     ?= 
 ROOTDIR    ?= ..
-ROOTBINDIR ?= $(ROOTDIR)/bin
+ROOTBINDIR ?= ./bin
 BINDIR     ?= $(ROOTBINDIR)/$(OSLOWER)
 ROOTOBJDIR ?= obj
 #LIBDIR     := $(ROOTDIR)/../lib
