@@ -1,3 +1,4 @@
+
 //
 // File:       clFFT.h
 //
@@ -52,13 +53,7 @@
 extern "C" {
 #endif
 
-// All OpenCL headers
-#if defined (__APPLE__) || defined(MACOSX)
-    #include <OpenCL/opencl.h>
-#else
-    #include <CL/opencl.h>
-#endif 
-
+#include <OpenCL/opencl.h>
 #include <stdio.h>
 
 // XForm type
