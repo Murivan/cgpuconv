@@ -179,10 +179,22 @@ CPUconv.o: CPUconv.cpp
 OCLconv.o: OCLconv.cpp oclUtils.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp
 	$(GCC) $(CCFLAGS) $(EXTRA_CCFLAGS) $(INCLUDES) -o $@ -c $<
 
-main.o: main.cpp 
+oclUtils.o: oclUtils.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp
 	$(GCC) $(CCFLAGS) $(EXTRA_CCFLAGS) $(INCLUDES) -o $@ -c $<
 
-cgpuconv: main.o GPUconv_kernel.o CPUconv.o OCLconv.o
+fft_execute.o: fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp
+	$(GCC) $(CCFLAGS) $(EXTRA_CCFLAGS) $(INCLUDES) -o $@ -c $<
+
+fft_kernelstring.o: fft_kernelstring.cpp fft_setup.cpp
+	$(GCC) $(CCFLAGS) $(EXTRA_CCFLAGS) $(INCLUDES) -o $@ -c $<
+
+fft_setup.o: fft_setup.cpp
+	$(GCC) $(CCFLAGS) $(EXTRA_CCFLAGS) $(INCLUDES) -o $@ -c $<
+
+cgpuconv.o: cgpuconv.cpp 
+	$(GCC) $(CCFLAGS) $(EXTRA_CCFLAGS) $(INCLUDES) -o $@ -c $<
+
+cgpuconv: cgpuconv.o GPUconv_kernel.o CPUconv.o OCLconv.o oclUtils.o
 	$(GCC) $(CCFLAGS) -o $@ $+ $(LDFLAGS) $(EXTRA_LDFLAGS)
 	mkdir -p ../../bin/$(OSLOWER)/$(TARGET)
 	cp $@ ../../bin/$(OSLOWER)/$(TARGET)
@@ -191,4 +203,4 @@ run: build
 	./cgpuconv
 
 clean:
-	rm -f cgpuconv main.o GPUconv_kernel.o OCLconv.o CPUconv.o
+	rm -f cgpuconv cgpuconv.o GPUconv_kernel.o OCLconv.o CPUconv.o oclUtils.o fft_execute.o fft_kernelstring.o fft_setup.o

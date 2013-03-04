@@ -13,9 +13,10 @@
 #include <math.h>
 
 // includes, project
+//#include <shrQATest.h>
 #include <cufft.h>
+
 #include <cutil_inline.h>
-#include <shrQATest.h>
 //#include <helper_cuda.h>
 //#include <helper_cuda_gl.h>
 //#include <helper_cuda_drvapi.h>
