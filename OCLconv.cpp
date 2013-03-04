@@ -201,9 +201,9 @@ float OCLconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
     if (err != CL_SUCCESS)
     {
         // write out standard error, Build Log and PTX, then cleanup and exit
-        shrLogEx(LOGBOTH | ERRORMSG, err, STDERROR);
-        oclLogBuildInfo(cpProgram, oclGetFirstDev(context));
-        oclLogPtx(cpProgram, oclGetFirstDev(context), "OCLconv.ptx");
+            //shrLogEx(LOGBOTH | ERRORMSG, err, STDERROR);
+            //oclLogBuildInfo(cpProgram, oclGetFirstDev(context));
+            //oclLogPtx(cpProgram, oclGetFirstDev(context), "OCLconv.ptx");
         //Cleanup(EXIT_FAILURE); 
     }
 

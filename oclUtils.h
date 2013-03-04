@@ -17,7 +17,7 @@
 // *********************************************************************
 
 // Common headers:  Cross-API utililties and OpenCL header
-#include <shrUtils.h>
+//#include <shrUtils.h>
 
 // All OpenCL headers
 #if defined (__APPLE__) || defined(MACOSX)
@@ -180,7 +180,7 @@ inline void __oclCheckErrorEX(cl_int iSample, cl_int iReference, void (*pCleanup
         iSample = (iSample == 0) ? -9999 : iSample; 
 
         // Log the error info
-        shrLog("\n !!! Error # %i (%s) at line %i , in file %s !!!\n\n", iSample, oclErrorString(iSample), iLine, cFile);
+        //shrLog("\n !!! Error # %i (%s) at line %i , in file %s !!!\n\n", iSample, oclErrorString(iSample), iLine, cFile);
 
         // Cleanup and exit, or just exit if no cleanup function pointer provided.  Use iSample (error code in this case) as process exit code.
         if (pCleanup != NULL)
@@ -189,7 +189,7 @@ inline void __oclCheckErrorEX(cl_int iSample, cl_int iReference, void (*pCleanup
         }
         else 
         {
-            shrLogEx(LOGBOTH | CLOSELOG, 0, "Exiting...\n");
+                //shrLogEx(LOGBOTH | CLOSELOG, 0, "Exiting...\n");
             exit(iSample);
         }
     }
