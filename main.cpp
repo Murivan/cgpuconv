@@ -14,11 +14,14 @@
 #include <iostream>
 // includes, project
 #include <sndfile.h>
+#include <portaudio.h>
+#include <boost/program_options.hpp>
 #include <GPUconv.cuh>
 #include <CPUconv.hpp>
 #include <OCLconv.hpp>
 
-    //using namespace std;
+namespace po= boost::program_options;
+using namespace std;
 int main (int argc, char * const argv[]){
 	clock_t start;
 	start=clock();

@@ -345,6 +345,10 @@ ifeq ($(USEOPENCL),1)
  LIB +=  -framework OpenCL
 endif
 
+ifeq ($(USEPORTAUDIO),1)
+ LIB +=  -lportaudio
+endif
+
 # check if verbose 
 ifeq ($(verbose), 1)
 	VERBOSE :=

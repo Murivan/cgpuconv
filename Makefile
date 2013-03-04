@@ -17,6 +17,8 @@ USECUFFT        := 1
 USELIBSNDFILE	:= 1
 USELIBFFTW3		:= 1
 USEOPENCL		:= 1
+USEPORTAUDIO		:= 1
+USEBOOST		:= 1
 emu				:= 0
 verbose := 1
 
