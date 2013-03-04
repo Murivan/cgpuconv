@@ -467,7 +467,7 @@ ptxdirectory:
 	$(VERBOSE)mkdir -p $(PTXDIR)
 
 makedirectories:
-	$(VERBOSE)mkdir -p $(LIBDIR)
+	#$(VERBOSE)mkdir -p $(LIBDIR)
 	$(VERBOSE)mkdir -p $(OBJDIR)
 	$(VERBOSE)mkdir -p $(TARGETDIR)
 
