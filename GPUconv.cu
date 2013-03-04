@@ -14,12 +14,12 @@
 
 // includes, project
 #include <cufft.h>
-//#include <cutil_inline.h>
-//#include <shrQATest.h>
-#include <helper_cuda.h>
-#include <helper_cuda_gl.h>
-#include <helper_cuda_drvapi.h>
-#include <helper_functions.h>
+#include <cutil_inline.h>
+#include <shrQATest.h>
+//#include <helper_cuda.h>
+//#include <helper_cuda_gl.h>
+//#include <helper_cuda_drvapi.h>
+//#include <helper_functions.h>
 
 #include <GPUconv.cuh>
 
@@ -39,8 +39,8 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 	//cudaDeviceReset();
 
 	//Pick the best one
-	//int rId=cutGetMaxGflopsDeviceId();
-	int rId=gpuGetMaxGflopsDeviceId();
+	int rId=cutGetMaxGflopsDeviceId();
+	//int rId=gpuGetMaxGflopsDeviceId();
 	cudaSetDevice(rId);
 	//Pick properties used for block and grid
 	cudaDeviceProp deviceProp;
