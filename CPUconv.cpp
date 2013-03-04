@@ -268,3 +268,8 @@ float CPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 
 	return -1.0f;
 }
+/*
+int main (int argc, char * const argv[]){
+ return 0;
+}
+*/

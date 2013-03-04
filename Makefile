@@ -11,12 +11,15 @@ EXECUTABLE	:= cGPUconv
 # Cuda source files (compiled with cudacc)
 CUFILES		:= GPUconv.cu
 # C/C++ source files (compiled with gcc / c++)
-CCFILES		:=  main.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp oclUtils.cpp
+CCFILES		:=  cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp oclUtils.cpp
 # Additional libraries needed by the project
 USECUFFT        := 1
 USELIBSNDFILE	:= 1
 USELIBFFTW3		:= 1
 USEOPENCL		:= 1
+USEPORTAUDIO		:= 1
+USEBOOST		:= 1
+emu				:= 0
 verbose := 1
 
 ################################################################################
