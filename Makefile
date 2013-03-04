@@ -17,6 +17,7 @@ USECUFFT        := 1
 USELIBSNDFILE	:= 1
 USELIBFFTW3		:= 1
 USEOPENCL		:= 1
+emu				:= 0
 verbose := 1
 
 ################################################################################

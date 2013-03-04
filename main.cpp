@@ -11,14 +11,15 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <iostream>
 // includes, project
 #include <sndfile.h>
 #include <GPUconv.cuh>
 #include <CPUconv.hpp>
 #include <OCLconv.hpp>
 
-int main(int argc, char** argv) 
-{	
+    //using namespace std;
+int main (int argc, char * const argv[]){
 	clock_t start;
 	start=clock();
 	SNDFILE      *infile1, *infile2;

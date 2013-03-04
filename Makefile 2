@@ -34,7 +34,7 @@
 ################################################################################
 
 
-USECUFFT        := 1
+USECUFFT        := 0
 USELIBSNDFILE	:= 1
 USELIBFFTW3		:= 1
 USEOPENCL		:= 1
@@ -96,6 +96,7 @@ GENCODE_FLAGS   := $(GENCODE_SM10) $(GENCODE_SM20) $(GENCODE_SM30)
 ifneq ($(DARWIN),) 
       LDFLAGS   := -Xlinker -rpath $(CUDA_LIB_PATH) -L$(CUDA_LIB_PATH) -lcudart -lcufft
       CCFLAGS   := -arch $(OS_ARCH) 
+
 else
   ifeq ($(OS_SIZE),32)
       LDFLAGS   := -L$(CUDA_LIB_PATH) -lcudart -lcufft
@@ -116,7 +117,9 @@ endif
 # OpenGL specific libraries 
 ifneq ($(DARWIN),)
     # Mac OSX specific libraries and paths to include
-    LIBPATH_OPENGL  := -L../../common/lib/$(OSLOWER) -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -lGL -lGLU ../../common/lib/$(OSLOWER)/libGLEW.a
+    #LIBPATH_OPENGL  := -L../../common/lib/$(OSLOWER) -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -lGL -lGLU ../../common/lib/$(OSLOWER)/libGLEW.a 
+    LIBPATH_OPENGL  := -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -lGL -lGLU $(CUDA_PATH)/samples/common/lib/$(OSLOWER)/libGLEW.a 
+
 else
     # Linux specific libraries and paths to include
     LIBPATH_OPENGL  := -L../../common/lib/$(OSLOWER)/$(OS_ARCH) -L/usr/X11R6/lib -lGL -lGLU -lX11 -lXi -lXmu -lglut -lGLEW 
@@ -133,7 +136,7 @@ endif
 
 
 # Common includes and paths for CUDA
-INCLUDES      := -I$(CUDA_INC_PATH) -I. -I.. -I../../common/inc
+INCLUDES      := -I$(CUDA_INC_PATH) -I. -I.. -I../../common/inc -I$(CUDA_PATH)/samples/common/inc
 LDFLAGS       += $(LIBPATH_OPENGL)
 
 
@@ -147,7 +150,8 @@ ifeq ($(USECUFFT),1)
 endif
 
 ifeq ($(USELIBFFTW3),1)
-LDFLAGS  += -L/usr/local/lib -lfftw3 -lm
+#LDFLAGS  += -L/usr/local/lib -lfftw3 -lm
+LDFLAGS  +=  -lfftw3 -lm
 #LIB += -L/opt/local/lib -lfftw3 -lfftw3l -lfftw3f -lm
 endif
 
@@ -169,10 +173,16 @@ build: cgpuconv
 GPUconv_kernel.o: GPUconv.cu
 	$(NVCC) $(NVCCFLAGS) $(EXTRA_NVCCFLAGS) $(GENCODE_FLAGS) $(INCLUDES) -o $@ -c $<
 
-cgpuconv.o: main.cpp
+CPUconv.o: CPUconv.cpp
 	$(GCC) $(CCFLAGS) $(EXTRA_CCFLAGS) $(INCLUDES) -o $@ -c $<
 
-cgpuconv: cgpuconv.o GPUconv_kernel.o
+OCLconv.o: OCLconv.cpp oclUtils.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp
+	$(GCC) $(CCFLAGS) $(EXTRA_CCFLAGS) $(INCLUDES) -o $@ -c $<
+
+main.o: main.cpp 
+	$(GCC) $(CCFLAGS) $(EXTRA_CCFLAGS) $(INCLUDES) -o $@ -c $<
+
+cgpuconv: main.o GPUconv_kernel.o CPUconv.o OCLconv.o
 	$(GCC) $(CCFLAGS) -o $@ $+ $(LDFLAGS) $(EXTRA_LDFLAGS)
 	mkdir -p ../../bin/$(OSLOWER)/$(TARGET)
 	cp $@ ../../bin/$(OSLOWER)/$(TARGET)
@@ -181,4 +191,4 @@ run: build
 	./cgpuconv
 
 clean:
-	rm -f cgpuconv cgpuconv.o GPUconv_kernel.o
+	rm -f cgpuconv main.o GPUconv_kernel.o OCLconv.o CPUconv.o
