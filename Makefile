@@ -41,6 +41,7 @@ USEOPENCL	:= 1
 USELIBFFTW3	:= 1
 USEPORTAUDIO	:= 1
 USELIBSNDFILE	:= 1
+USELIBBOOSTPO	:= 1
 
 
 emu		:= 0
@@ -168,6 +169,10 @@ endif
 
 ifeq ($(USEPORTAUDIO),1)
  LDFLAGS +=  -lportaudio
+endif
+
+ifeq ($(USELIBBOOSTPO),1)
+ LDFLAGS +=  -lboost_program_options
 endif
 
 ifeq ($(USEOPENCL),1)
