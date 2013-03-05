@@ -45,6 +45,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//Modified by Davide Andrea Mauro on 2013-03-05
 
 #ifndef __CLFFT_H
 #define __CLFFT_H
@@ -52,8 +53,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+// All OpenCL headers
+#if defined (__APPLE__) || defined(MACOSX)
 #include <OpenCL/opencl.h>
+#else
+#include <CL/opencl.h>
+#endif
+    
 #include <stdio.h>
 
 // XForm type

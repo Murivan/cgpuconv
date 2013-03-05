@@ -2,7 +2,7 @@
 //  main.cpp
 //
 //  Created by Davide Andrea Mauro on 2011-07-29.
-//	Last Edited by Davide Andrea Mauro on 2013-02-27.
+//	Last Edited by Davide Andrea Mauro on 2013-03-05.
 //
 
 // includes, system
@@ -12,16 +12,18 @@
 #include <math.h>
 #include <time.h>
 #include <iostream>
-// includes, project
+// includes, libraries
 #include <sndfile.h>
 #include <portaudio.h>
 #include <boost/program_options.hpp>
+// includes, project
 #include <GPUconv.cuh>
 #include <CPUconv.hpp>
 #include <OCLconv.hpp>
 
 namespace po= boost::program_options;
-using namespace std;
+
+
 int main (int argc, char * const argv[]){
 	clock_t start;
 	start=clock();

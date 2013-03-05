@@ -2,7 +2,7 @@
 //  cgpuconv.cpp
 //
 //  Created by Davide Andrea Mauro on 2011-07-29.
-//	Last Edited by Davide Andrea Mauro on 2013-02-27.
+//	Last Edited by Davide Andrea Mauro on 2013-03-04.
 //
 
 #include <cgpuconv.hpp>

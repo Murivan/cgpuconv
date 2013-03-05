@@ -3,7 +3,7 @@
 //  OCLconv
 //
 //  Created by Davide Andrea Mauro on 2011-07-29.
-//	Last Edited by Davide Andrea Mauro on 2013-02-27.
+//	Last Edited by Davide Andrea Mauro on 2013-03-05.
 //
 
 // includes, system
@@ -158,7 +158,7 @@ size_t shrRoundUp(int group_size, int global_size)
 char* shrFindFilePath(const char* filename, const char* executable_path)
 {
         // <executable_name> defines a variable that is replaced with the name of the executable
-    
+    using namespace std;
         // Typical relative search paths to locate needed companion files (e.g. sample input data, or JIT source files)
         // The origin for the relative search may be the .exe file, a .bat file launching an .exe, a browser .exe launching the .exe or .bat, etc
     const char* searchPath[] =

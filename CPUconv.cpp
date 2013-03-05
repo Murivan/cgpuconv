@@ -3,7 +3,7 @@
 //  CPUconv
 //
 //  Created by Davide Andrea Mauro on 2011-07-29.
-//	Last Edited by Davide Andrea Mauro on 2013-02-27.
+//	Last Edited by Davide Andrea Mauro on 2013-03-05.
 //
 
 // includes, system
@@ -16,6 +16,8 @@
 #include <complex>
 #include <fftw3.h>
 #include <CPUconv.hpp>
+
+
 float CPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, int FILTER_KERNEL_SIZE, float* outputsx, float* outputdx, int direct) 
 {	
 	if(direct==1){
