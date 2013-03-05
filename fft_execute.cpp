@@ -326,7 +326,7 @@ clFFT_ExecutePlannar( cl_command_queue queue, clFFT_Plan Plan, cl_int batchSize,
 
 cl_int 
 clFFT_1DTwistInterleaved(clFFT_Plan Plan, cl_command_queue queue, cl_mem array, 
-						 size_t numRows, size_t numCols, size_t startRow, size_t rowsToProcess, clFFT_Direction dir)
+						 unsigned numRows, unsigned numCols, unsigned startRow, unsigned rowsToProcess, clFFT_Direction dir)
 {
 	cl_fft_plan *plan = (cl_fft_plan *) Plan;
 	
@@ -365,7 +365,7 @@ clFFT_1DTwistInterleaved(clFFT_Plan Plan, cl_command_queue queue, cl_mem array,
 
 cl_int 
 clFFT_1DTwistPlannar(clFFT_Plan Plan, cl_command_queue queue, cl_mem array_real, cl_mem array_imag, 
-					 size_t numRows, size_t numCols, size_t startRow, size_t rowsToProcess, clFFT_Direction dir)
+					 unsigned numRows, unsigned numCols, unsigned startRow, unsigned rowsToProcess, clFFT_Direction dir)
 {
 	cl_fft_plan *plan = (cl_fft_plan *) Plan;
 	

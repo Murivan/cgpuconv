@@ -1,28 +1,11 @@
 // GPU/CPU Convolution engine
-//  main.cpp
+//  cgpuconv.cpp
 //
 //  Created by Davide Andrea Mauro on 2011-07-29.
-//	Last Edited by Davide Andrea Mauro on 2013-03-05.
+//	Last Edited by Davide Andrea Mauro on 2013-03-04.
 //
 
-// includes, system
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
-#include <iostream>
-// includes, libraries
-#include <sndfile.h>
-#include <portaudio.h>
-#include <boost/program_options.hpp>
-// includes, project
-#include <GPUconv.cuh>
-#include <CPUconv.hpp>
-#include <OCLconv.hpp>
-
-namespace po= boost::program_options;
-
+#include <cgpuconv.hpp>
 
 int main (int argc, char * const argv[]){
 	clock_t start;

@@ -13,9 +13,15 @@
 #include <math.h>
 
 // includes, project
+//#include <shrQATest.h>
 #include <cufft.h>
-#include <cutil_inline.h>
-#include <shrQATest.h>
+
+//#include <cutil_inline.h>
+#include <helper_cuda.h>
+#include <helper_cuda_gl.h>
+#include <helper_cuda_drvapi.h>
+#include <helper_functions.h>
+
 #include <GPUconv.cuh>
 
 
@@ -34,7 +40,8 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 	//cudaDeviceReset();
 
 	//Pick the best one
-	int rId=cutGetMaxGflopsDeviceId();
+	//int rId=cutGetMaxGflopsDeviceId();
+	int rId=gpuGetMaxGflopsDeviceId();
 	cudaSetDevice(rId);
 	//Pick properties used for block and grid
 	cudaDeviceProp deviceProp;
@@ -93,31 +100,41 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 		// CUFFT plan
 		cufftHandle plan;	
 		int window=new_size;
-		cufftSafeCall(cufftPlan1d(&plan, window, CUFFT_C2C, (new_size/window)));
+		//cufftSafeCall(cufftPlan1d(&plan, window, CUFFT_C2C, (new_size/window)));
+		cufftPlan1d(&plan, window, CUFFT_C2C, (new_size/window));
 
 		// Allocate device memory for signal
 		cufftComplex* d_signal;
-		cutilSafeCall(cudaMalloc((void**)&d_signal, mem_size));
+		//cutilSafeCall(cudaMalloc((void**)&d_signal, mem_size));
+		cudaMalloc((void**)&d_signal, mem_size);
 
 		// Copy host memory to device
-		cutilSafeCall(cudaMemcpy(d_signal, h_signal, mem_size, cudaMemcpyHostToDevice));
+		//cutilSafeCall(cudaMemcpy(d_signal, h_signal, mem_size, cudaMemcpyHostToDevice));
+		cudaMemcpy(d_signal, h_signal, mem_size, cudaMemcpyHostToDevice);
 		//   printf("Device Memory allocated for Signal.\n");
 
 
 		// Allocate device memory for filter kernel
 		cufftComplex* d_filter_kernels[2];
 		for (int i=0; i<2;i++){
-			cutilSafeCall(cudaMalloc((void**)&d_filter_kernels[i], mem_size));
+			//cutilSafeCall(cudaMalloc((void**)&d_filter_kernels[i], mem_size));
+			//// Copy host memory to device
+			//cutilSafeCall(cudaMemcpy(d_filter_kernels[i], h_filter_kernels[i], mem_size, cudaMemcpyHostToDevice));
+			cudaMalloc((void**)&d_filter_kernels[i], mem_size);
 			// Copy host memory to device
-			cutilSafeCall(cudaMemcpy(d_filter_kernels[i], h_filter_kernels[i], mem_size, cudaMemcpyHostToDevice));
+			cudaMemcpy(d_filter_kernels[i], h_filter_kernels[i], mem_size, cudaMemcpyHostToDevice);
 		}
 		// printf("Device Memory allocated for Filters.\n");
 
 
 		//	printf("Transforming signal cufftExecC2C\n");
-		cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_signal, (cufftComplex *)d_signal, CUFFT_FORWARD));
+		//cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_signal, (cufftComplex *)d_signal, CUFFT_FORWARD));
+		cufftExecC2C(plan, (cufftComplex *)d_signal, (cufftComplex *)d_signal, CUFFT_FORWARD);
+
 		for (int i=0; i<2;i++){
-			cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_filter_kernels[i], (cufftComplex *)d_filter_kernels[i], CUFFT_FORWARD));
+			//cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_filter_kernels[i], (cufftComplex *)d_filter_kernels[i], CUFFT_FORWARD));
+			cufftExecC2C(plan, (cufftComplex *)d_filter_kernels[i], (cufftComplex *)d_filter_kernels[i], CUFFT_FORWARD);
+
 		}
 		cudaThreadSynchronize();
 
@@ -130,12 +147,14 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 			ComplexPointwiseMul<<<grid_size, block_size>>>(d_filter_kernels[i], d_signal, new_size);
 		cudaThreadSynchronize();
 		// Check if kernel execution generated and error
-		cutilCheckMsg("Kernel execution failed [ ComplexPointwiseMul ]");
+		//cutilCheckMsg("Kernel execution failed [ ComplexPointwiseMul ]");
 
 
 		// Transform signal back
 		for (int i=0; i<2;i++){
-			cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_filter_kernels[i], (cufftComplex *)d_filter_kernels[i], CUFFT_INVERSE));
+			//cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_filter_kernels[i], (cufftComplex *)d_filter_kernels[i], CUFFT_INVERSE));
+			cufftExecC2C(plan, (cufftComplex *)d_filter_kernels[i], (cufftComplex *)d_filter_kernels[i], CUFFT_INVERSE);
+
 		}
 		cudaThreadSynchronize();
 
@@ -143,7 +162,8 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 		cufftComplex* h_convolved_signal[2];
 		for (int i=0; i<2;i++){
 			h_convolved_signal[i]= (cufftComplex*)malloc(mem_size);
-			cutilSafeCall(cudaMemcpy(h_convolved_signal[i], d_filter_kernels[i], mem_size, cudaMemcpyDeviceToHost));
+			//cutilSafeCall(cudaMemcpy(h_convolved_signal[i], d_filter_kernels[i], mem_size, cudaMemcpyDeviceToHost));
+			cudaMemcpy(h_convolved_signal[i], d_filter_kernels[i], mem_size, cudaMemcpyDeviceToHost);
 		}
 
 
@@ -166,17 +186,23 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 
 		//printf("Freeing resources.\n");
 		//Destroy CUFFT context
-		cufftSafeCall(cufftDestroy(plan));
+		//cufftSafeCall(cufftDestroy(plan));
+		cufftDestroy(plan);
+		
 		// cleanup memory
 		free(h_signal);
-		cutilSafeCall(cudaFree(d_signal));
+		//cutilSafeCall(cudaFree(d_signal));
+		cudaFree(d_signal);
+		
 		for (int i=0; i<2;i++){
 			free(h_filter_kernels[i]);
 			free(h_convolved_signal[i]);
-			cutilSafeCall(cudaFree(d_filter_kernels[i]));
+			//cutilSafeCall(cudaFree(d_filter_kernels[i]));
+			cudaFree(d_filter_kernels[i]);
 		}
 		cudaDeviceSynchronize();
-		cutilDeviceReset(); 
+		//cutilDeviceReset(); 
+		cudaDeviceReset(); 
 		return new_size;
 	}
 
@@ -218,19 +244,23 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 		// CUFFT plan
 		cufftHandle plan;	
 		int window=payload;
-		cufftSafeCall(cufftPlan1d(&plan, window, CUFFT_C2C, (payload/window)));
+		//cufftSafeCall(cufftPlan1d(&plan, window, CUFFT_C2C, (payload/window)));
+		cufftPlan1d(&plan, window, CUFFT_C2C, (payload/window));
 		// Allocate device memory for filter kernel
 		cufftComplex* d_filter_kernels[2];
 		for (int i=0; i<2;i++){
-			cutilSafeCall(cudaMalloc((void**)&d_filter_kernels[i], mem_pay));
+			//cutilSafeCall(cudaMalloc((void**)&d_filter_kernels[i], mem_pay));
+			cudaMalloc((void**)&d_filter_kernels[i], mem_pay);
 			// Copy host memory to device
-			cutilSafeCall(cudaMemcpy(d_filter_kernels[i], h_filter_kernels[i], mem_pay, cudaMemcpyHostToDevice));
+			//cutilSafeCall(cudaMemcpy(d_filter_kernels[i], h_filter_kernels[i], mem_pay, cudaMemcpyHostToDevice));
+			cudaMemcpy(d_filter_kernels[i], h_filter_kernels[i], mem_pay, cudaMemcpyHostToDevice);
 		}
 		// printf("Device Memory allocated for Filters.\n");
 		//	printf("Transforming signal cufftExecC2C\n");
 		cudaThreadSynchronize();
 		for (int i=0; i<2;i++){
-			cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_filter_kernels[i], (cufftComplex *)d_filter_kernels[i], CUFFT_FORWARD));
+			//cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_filter_kernels[i], (cufftComplex *)d_filter_kernels[i], CUFFT_FORWARD));
+			cufftExecC2C(plan, (cufftComplex *)d_filter_kernels[i], (cufftComplex *)d_filter_kernels[i], CUFFT_FORWARD);
 		}
 		cudaThreadSynchronize();
 
@@ -265,13 +295,16 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 			// Allocate device memory for signal
 			cufftComplex* d_signal[2];
 			for (int i=0; i<2;i++){
-				cutilSafeCall(cudaMalloc((void**)&d_signal[i], mem_pay));
+				//cutilSafeCall(cudaMalloc((void**)&d_signal[i], mem_pay));
+				cudaMalloc((void**)&d_signal[i], mem_pay);
 				// Copy host memory to device
-				cutilSafeCall(cudaMemcpy(d_signal[i], h_signal, mem_pay, cudaMemcpyHostToDevice));
+				//cutilSafeCall(cudaMemcpy(d_signal[i], h_signal, mem_pay, cudaMemcpyHostToDevice));
+				cudaMemcpy(d_signal[i], h_signal, mem_pay, cudaMemcpyHostToDevice);
 
 				//   printf("Device Memory allocated for Signal.\n");
 				//	printf("Transforming signal cufftExecC2C\n");
-				cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_signal[i], (cufftComplex *)d_signal[i], CUFFT_FORWARD));
+				//cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_signal[i], (cufftComplex *)d_signal[i], CUFFT_FORWARD));
+				cufftExecC2C(plan, (cufftComplex *)d_signal[i], (cufftComplex *)d_signal[i], CUFFT_FORWARD);
 			}
 			cudaThreadSynchronize();
 			// Multiply the coefficients together and normalize the result
@@ -281,12 +314,13 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 			for (int i=0; i<2;i++){
 				ComplexPointwiseMul<<<grid_size, block_size>>>(d_signal[i], d_filter_kernels[i], payload);
 				// Check if kernel execution generated and error
-				cutilCheckMsg("Kernel execution failed [ ComplexPointwiseMul ]");
+				//cutilCheckMsg("Kernel execution failed [ ComplexPointwiseMul ]");
 			}
 			cudaThreadSynchronize();
 			// Transform signal back
 			for (int i=0; i<2;i++){
-				cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_signal[i], (cufftComplex *)d_signal[i], CUFFT_INVERSE));
+				//cufftSafeCall(cufftExecC2C(plan, (cufftComplex *)d_signal[i], (cufftComplex *)d_signal[i], CUFFT_INVERSE));
+				cufftExecC2C(plan, (cufftComplex *)d_signal[i], (cufftComplex *)d_signal[i], CUFFT_INVERSE);
 			}
 			cudaThreadSynchronize();
 
@@ -295,7 +329,8 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 			cufftComplex* h_convolved_signal[2];
 			for (int i=0; i<2;i++){
 				h_convolved_signal[i]= (cufftComplex*)malloc(mem_pay);
-				cutilSafeCall(cudaMemcpy(h_convolved_signal[i], d_signal[i], mem_pay, cudaMemcpyDeviceToHost));
+				//cutilSafeCall(cudaMemcpy(h_convolved_signal[i], d_signal[i], mem_pay, cudaMemcpyDeviceToHost));
+				cudaMemcpy(h_convolved_signal[i], d_signal[i], mem_pay, cudaMemcpyDeviceToHost);
 			}
 			//printf("Writing back.\n");
 			for (int i=0; i< payload; i++){
@@ -308,8 +343,10 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 			free(h_signal);
 			free(h_convolved_signal[0]);
 			free(h_convolved_signal[1]);
-			cutilSafeCall(cudaFree(d_signal[0]));
-			cutilSafeCall(cudaFree(d_signal[1]));
+			//cutilSafeCall(cudaFree(d_signal[0]));
+			//cutilSafeCall(cudaFree(d_signal[1]));
+			cudaFree(d_signal[0]);
+			cudaFree(d_signal[1]);
 		}
 
 		float maxot= abs(maxo[0])>=abs(maxo[1])? abs(maxo[0]): abs(maxo[1]);
@@ -320,16 +357,21 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 
 		//printf("Freeing resources.\n");
 		//Destroy CUFFT context
-		cufftSafeCall(cufftDestroy(plan));
+		//cufftSafeCall(cufftDestroy(plan));
+		cufftDestroy(plan);
 		// cleanup memory
 		free(h_filter_kernels[0]);
 		free(h_filter_kernels[1]);
-		cutilSafeCall(cudaFree(d_filter_kernels[0]));
-		cutilSafeCall(cudaFree(d_filter_kernels[1]));
+		//cutilSafeCall(cudaFree(d_filter_kernels[0]));
+		//cutilSafeCall(cudaFree(d_filter_kernels[1]));
+		cudaFree(d_filter_kernels[0]);
+		cudaFree(d_filter_kernels[1]);
 		free(tresultsx);
 		free(tresultdx);
 		cudaDeviceSynchronize();
-		cutilDeviceReset(); 
+		//cutilDeviceReset(); 
+		cudaDeviceReset(); 
+
 
 		return new_size;
 	}
