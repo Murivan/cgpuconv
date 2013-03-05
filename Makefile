@@ -33,13 +33,18 @@
 #
 ################################################################################
 
+######
+# Modified by Davide Andrea Mauro on 2013-03-05
 
 USECUFFT        := 0
+USEOPENCL	:= 1
+USELIBFFTW3	:= 1
+USEPORTAUDIO	:= 1
 USELIBSNDFILE	:= 1
-USELIBFFTW3		:= 1
-USEOPENCL		:= 1
-emu				:= 0
-verbose := 1
+
+
+emu		:= 0
+verbose 	:= 1
 
 # OS Name (Linux or Darwin)
 OSUPPER = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
@@ -159,6 +164,10 @@ ifeq ($(USELIBSNDFILE),1)
  LDFLAGS +=  -lsndfile
  #LIB +=  -L/opt/local/lib -lsndfile 
  #LIB += -./libsndfile.1.dylib
+endif
+
+ifeq ($(USEPORTAUDIO),1)
+ LDFLAGS +=  -lportaudio
 endif
 
 ifeq ($(USEOPENCL),1)
