@@ -16,28 +16,37 @@ FILE (GLOB sources
 		${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
     )
 
-FIND_PACKAGE(Boost REQUIRED)
-IF (Boost_FOUND)
-	INCLUDE_DIRECTORIES($ENV{BOOSTDIR}/include)
-	LINK_DIRECTORIES($ENV{BOOSTDIR}/lib64)
-ENDIF()
+
 
 #Support for CUDA Integration
-FIND_PACKAGE(CUDA)
+FIND_PACKAGE(CUDA REQUIRED)
 if(CUDA_FOUND)
-CUDA_ADD_EXECUTABLE(GPUconv GPUconv.cu GPUconv.cuh)
+CUDA_ADD_EXECUTABLE(GPUconv GPUconv.cu)
 else(CUDA_FOUND)
     message("CUDA is not installed on this system.")
 endif()
 
-include_directories("$(PORT_AUDIO_INC)")
-include_directories("$(BOOST_INCLUDEDIR)")
-include_directories("$(LIBSNDFILE_INC)")
- 
-link_directories("$(BOOST_ROOT)/stage/lib") 	
-link_directories("$(PORT_AUDIO_LIB)")
-link_directories("$(LIBSNDFILE_LIB)")
 
-add_executable(cgpuconv cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
+FIND_PACKAGE(Boost REQUIRED)
+IF (Boost_FOUND)
+	INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR})
+	LINK_DIRECTORIES( ${Boost_LIBRARY_DIR})
+ENDIF()
 
-target_link_libraries(cgpuconv portaudio_x64 libsndfile-1)
+FIND_PACKAGE(PortAudio REQUIRED)
+IF (PORTAUDIO_FOUND)
+	INCLUDE_DIRECTORIES(${PORTAUDIO_INCLUDE_DIR})
+	LINK_DIRECTORIES(${PORTAUDIO_LIBRARY_DIR})
+ENDIF()
+
+FIND_PACKAGE(LIBSNDFILE REQUIRED)
+IF (PORTAUDIO_FOUND)
+	INCLUDE_DIRECTORIES(${SNDFILE_INCLUDE_DIR})
+	LINK_DIRECTORIES(${SNDFILE_LIBRARY_DIR})
+ENDIF()
+
+
+
+add_executable(cgpuconv GPUconv cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
+
+target_link_libraries(cgpuconv ${Boost_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${SNDFILE_LIBRARIES})
