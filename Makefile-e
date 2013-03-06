@@ -134,6 +134,40 @@ endif
 INCLUDES      := -I$(CUDA_INC_PATH) -I. -I.. -I../../common/inc -I$(CUDA_PATH)/samples/common/inc
 LDFLAGS       += -lcudart -lcufft
 
+
+ifeq ($(USECUFFT),1)
+  ifeq ($(emu),1)
+    LDFLAGS += -lcufftemu
+  else
+    LDFLAGS += -lcufft
+  endif
+endif
+
+ifeq ($(USELIBFFTW3),1)
+#LDFLAGS  += -L/usr/local/lib -lfftw3 -lm
+LDFLAGS  +=  -lfftw3 -lm
+#LIB += -L/opt/local/lib -lfftw3 -lfftw3l -lfftw3f -lm
+endif
+
+ifeq ($(USELIBSNDFILE),1)
+ LDFLAGS +=  -lsndfile
+ #LIB +=  -L/opt/local/lib -lsndfile 
+ #LIB += -./libsndfile.1.dylib
+endif
+
+ifeq ($(USEPORTAUDIO),1)
+ LDFLAGS +=  -lportaudio
+endif
+
+ifeq ($(USELIBBOOSTPO),1)
+ LDFLAGS +=  -lboost_program_options
+endif
+
+ifeq ($(USEOPENCL),1)
+ LDFLAGS +=  -framework OpenCL
+endif
+
+
 all: build
 
 build: cgpuconv
