@@ -288,16 +288,16 @@ float OCLconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
     //Start Setup       
     cl_int err;
     unsigned int num_devices;
-    cl_device_type device_type = getGlobalDeviceType(); 
+    cl_device_type device_type = getGlobalDeviceType();
     if(device_type != CL_DEVICE_TYPE_GPU) 
     {
         printf("Test only supported on DEVICE_TYPE_GPU\n");
         return -1;
     }
-    cl_platform_id platform_ids[16];
-    err= clGetPlatformIDs(sizeof(platform_ids), platform_ids, NULL);
-    err = clGetDeviceIDs(platform_ids[0], device_type, sizeof(device_ids), device_ids, &num_devices);
-    printf("%d", err);
+        //cl_platform_id platform_ids[16];
+        //err= clGetPlatformIDs(sizeof(platform_ids), platform_ids, NULL);
+    err = clGetDeviceIDs(NULL, device_type, sizeof(device_ids), device_ids, &num_devices);
+        //printf("%d", err);
     if(err) 
     {       
         printf("clGetComputeDevice failed\n");
