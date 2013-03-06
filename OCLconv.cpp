@@ -296,6 +296,7 @@ float OCLconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
     }
 
     err = clGetDeviceIDs(NULL, device_type, sizeof(device_ids), device_ids, &num_devices);
+    printf("%d", err);
     if(err) 
     {       
         printf("clGetComputeDevice failed\n");
