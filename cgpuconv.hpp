@@ -38,6 +38,9 @@ typedef short SAMPLE;
 #define INPUT_CHANNELS  (1)
 #define OUTPUT_CHANNELS  (2)
 #define PRINTF_S_FORMAT "%d"
+const size_t ERROR_IN_COMMAND_LINE = 1;
+const size_t SUCCESS = 0;
+const size_t ERROR_UNHANDLED_EXCEPTION = 2;
 
 namespace po= boost::program_options;
 using namespace std;
