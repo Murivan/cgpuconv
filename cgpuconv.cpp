@@ -26,7 +26,7 @@ int main (int argc, char * const argv[]){
     ("version,v", "print version string")
     ("help,h", "produce help message")
     ("input,i", po::value<char *>(&oinfile)->default_value(""), "Mono Input file path")
-    ("impulse, p", po::value<char *>(&oimpulse)->default_value(""), "Mono/Stereo Impulse Response path")
+    ("impulse,p", po::value<char *>(&oimpulse)->default_value(""), "Mono/Stereo Impulse Response path")
     ("output,o", po::value<char *>(&ooutput)->default_value(""), "Output file path")
     ("mode,m", po::value<int>(&mode)->default_value(0), "0 for Overlap and Save or 1 for Direct.")
     ("target,t", po::value<int>(&target)->default_value(0), "0 for CPU, 1 for CUDA, or 2 for OpenCL.")
