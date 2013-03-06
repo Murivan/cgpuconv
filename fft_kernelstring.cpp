@@ -52,6 +52,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string.h>
 #include <assert.h>
 #include "fft_internal.h"
 #include "clFFT.h"
