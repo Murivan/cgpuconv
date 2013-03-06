@@ -131,7 +131,7 @@ endif
 
 
 # Common includes and paths for CUDA
-INCLUDES      := -I$(CUDA_INC_PATH) -I. -I.. -I../../common/inc
+INCLUDES      := -I$(CUDA_INC_PATH) -I. -I.. -I../../common/inc -I$(CUDA_PATH)/samples/common/inc
 LDFLAGS       += -lcudart -lcufft
 
 all: build
