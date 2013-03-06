@@ -33,8 +33,9 @@ float GPUconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
 	//Look for CUDA capable Devices
 	int deviceCount = 0;
 	cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
+	printf("%d.\n", deviceCount);
 	if (deviceCount == 0){
-		printf("There is no device supporting CUDA\n");
+		printf("There is no device supporting CUDA.\n");
 		return -1.0f;
 	}
 	//cudaDeviceReset();
