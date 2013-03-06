@@ -14,8 +14,6 @@ FILE (GLOB sources
 		${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
 		${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/*.cu
-		${CMAKE_CURRENT_SOURCE_DIR}/src/*.cuh
     )
 
 FIND_PACKAGE(Boost REQUIRED)
@@ -23,6 +21,14 @@ IF (Boost_FOUND)
 	INCLUDE_DIRECTORIES($ENV{BOOSTDIR}/include)
 	LINK_DIRECTORIES($ENV{BOOSTDIR}/lib64)
 ENDIF()
+
+#Support for CUDA Integration
+FIND_PACKAGE(CUDA)
+if(CUDA_FOUND)
+CUDA_ADD_EXECUTABLE(GPUconv GPUconv.cu GPUconv.cuh)
+else(CUDA_FOUND)
+    message("CUDA is not installed on this system.")
+endif()
 
 include_directories("$(PORT_AUDIO_INC)")
 include_directories("$(BOOST_INCLUDEDIR)")
@@ -32,6 +38,6 @@ link_directories("$(BOOST_ROOT)/stage/lib")
 link_directories("$(PORT_AUDIO_LIB)")
 link_directories("$(LIBSNDFILE_LIB)")
 
-add_executable(TPT-AudioRenderer TPT-AudioRenderer.cpp TPT-AudioRenderer.h)
+add_executable(cgpuconv cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
 
-target_link_libraries(TPT-AudioRenderer portaudio_x64 libsndfile-1)
+target_link_libraries(cgpuconv portaudio_x64 libsndfile-1)
