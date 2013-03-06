@@ -164,7 +164,7 @@ ifeq ($(USELIBBOOSTPO),1)
 endif
 
 ifeq ($(USEOPENCL),1)
- LDFLAGS +=  -framework OpenCL
+ LDFLAGS +=  -lOpenCL
 endif
 
 
