@@ -7,6 +7,9 @@ IF(UNIX)
   set ( CMAKE_CXX_FLAGS "-Wno-write-strings")
 ENDIF(UNIX)
 
+# additional CMake modules
+set(CMAKE_MODULE_PATH "${cgpuconv_SOURCE_DIR}/cmake")
+
 include_directories(  ${CMAKE_CURRENT_SOURCE_DIR} )
 #include_directories(  ${CMAKE_CURRENT_BINARY_DIR} )
 
@@ -47,6 +50,6 @@ ENDIF()
 
 
 
-add_executable(cgpuconv GPUconv cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
+add_executable(cgpuconv cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
 
 target_link_libraries(cgpuconv ${Boost_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${SNDFILE_LIBRARIES})
