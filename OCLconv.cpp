@@ -423,15 +423,23 @@ float OCLconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
     //printf("%d , %d.\n",proposed_length, agreed_length);
     n.x=pow2_length;
 	int length = n.x * n.y * n.z * batchSize;
-  
-	//Host Memory  
+  #ifdef _WIN32 || _WIN64
+            //Host Memory
+        clFFT_SplitComplex data_input_split;
+        clFFT_SplitComplex data_filsx_split;
+        clFFT_SplitComplex data_fildx_split;
+            //clFFT_SplitComplex data_output_split = (clFFT_SplitComplex) { NULL, NULL };
+        clFFT_SplitComplex data_outputsx_split;
+        clFFT_SplitComplex data_outputdx_split;
+#else
+	//Host Memory
   	clFFT_SplitComplex data_input_split = (clFFT_SplitComplex) { NULL, NULL };
 	clFFT_SplitComplex data_filsx_split = (clFFT_SplitComplex) { NULL, NULL };
 	clFFT_SplitComplex data_fildx_split = (clFFT_SplitComplex) { NULL, NULL };
 	//clFFT_SplitComplex data_output_split = (clFFT_SplitComplex) { NULL, NULL };
 	clFFT_SplitComplex data_outputsx_split = (clFFT_SplitComplex) { NULL, NULL };
 	clFFT_SplitComplex data_outputdx_split = (clFFT_SplitComplex) { NULL, NULL };
-	
+#endif
 	//Device memory
 	cl_mem data_input_real = NULL;
 	cl_mem data_input_imag = NULL;
@@ -627,11 +635,17 @@ if(direct==0){
 	//Create PLAN
 	plan = clFFT_CreatePlan(context, n, clFFT_1D, clFFT_SplitComplexFormat, &err );
 	
+      #ifdef _WIN32 || _WIN64
+    	//Host Memory
+	clFFT_SplitComplex data_filsx_split;
+	clFFT_SplitComplex data_fildx_split;
+	clFFT_SplitComplex data_input_split;
+#else
 	//Host Memory  
 	clFFT_SplitComplex data_filsx_split = (clFFT_SplitComplex) { NULL, NULL };
 	clFFT_SplitComplex data_fildx_split = (clFFT_SplitComplex) { NULL, NULL };
 	clFFT_SplitComplex data_input_split = (clFFT_SplitComplex) { NULL, NULL };
-	
+#endif
 	//Device memory
 	cl_mem data_filsx_real = NULL;
 	cl_mem data_filsx_imag = NULL;
@@ -709,15 +723,24 @@ if(direct==0){
 	//BIG LOOP!!!
 	for(int k=0; k<SIGNAL_SIZE; (k+=(length-FILTER_KERNEL_SIZE))){
 		//Declare
+        
+              #ifdef _WIN32 || _WIN64
+        
+		clFFT_SplitComplex data_input_split;
+        clFFT_SplitComplex data_outputsx_split;
+		clFFT_SplitComplex data_outputdx_split;
+#else
+        
 		clFFT_SplitComplex data_input_split = (clFFT_SplitComplex) { NULL, NULL };
+        clFFT_SplitComplex data_outputsx_split = (clFFT_SplitComplex) { NULL, NULL };
+		clFFT_SplitComplex data_outputdx_split = (clFFT_SplitComplex) { NULL, NULL };
+#endif
 		data_input_split.real    = (float *) malloc(sizeof(float) * length);
 		data_input_split.imag    = (float *) malloc(sizeof(float) * length);
 		cl_mem data_inputsx_real = NULL;
 		cl_mem data_inputsx_imag = NULL;
 		cl_mem data_inputdx_real = NULL;
 		cl_mem data_inputdx_imag = NULL;
-		clFFT_SplitComplex data_outputsx_split = (clFFT_SplitComplex) { NULL, NULL };
-		clFFT_SplitComplex data_outputdx_split = (clFFT_SplitComplex) { NULL, NULL };
 		data_outputsx_split.real    = (float *) malloc(sizeof(float) * length);
 		data_outputsx_split.imag    = (float *) malloc(sizeof(float) * length);
 		data_outputdx_split.real    = (float *) malloc(sizeof(float) * length);
