@@ -70,6 +70,14 @@ num2str(int num)
 	sprintf(temp, "%d", num);
 	return string(temp);
 }
+#ifdef WIN32
+    // Calculates log2 of number.
+double Log2( double n )
+{
+        // log(n)/log(2) is log2.
+    return log( n ) / log(double(2));
+}
+#endif
 
 // For any n, this function decomposes n into factors for loacal memory tranpose 
 // based fft. Factors (radices) are sorted such that the first one (radixArray[0])
