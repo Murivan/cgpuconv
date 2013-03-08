@@ -38,7 +38,7 @@ int main (int argc, char * const argv[]){
     ("input,i", po::value<string>(&oinfile)->implicit_value(" "), "Mono Input file path")
     ("impulse,p", po::value<string>(&oimpulse)->implicit_value(" "), "Mono/Stereo Impulse Response path")
     ("output,o", po::value<string>(&ooutput)->implicit_value(" "), "Output file path")
-    ("mode,m", po::value<int>(&mode)->default_value(0), "0 for Overlap and Save or 1 for Direct.")
+    ("mode,m", po::value<int>(&mode)->default_value(0), "0 for Overlap and Add or 1 for Direct.")
     ("target,t", po::value<int>(&target)->default_value(0), "0 for CPU, 1 for CUDA, or 2 for OpenCL.")
     ("leftfir,l", po::value<char *>(&leftfir)->default_value(".\\HRTF\\sub1_L.wav"), "Left FIR path")
     ("rightfir,r", po::value<char *>(&rightfir)->default_value(".\\HRTF\\sub1_R.wav"), "Right FIR path")
@@ -85,7 +85,7 @@ int main (int argc, char * const argv[]){
 		return 1;
 	}
 	else {
-		cout << "Starting with default parameters.\n";
+		cout << "Starting with these parameters: Mode "<< mode << ". Target"<< target <<".\n";
 	}
 
 //	if (argc!=6)
@@ -162,7 +162,8 @@ int main (int argc, char * const argv[]){
     
 	float new_size=-1.0f;
     clock_t intermediate_start, intermediate_end;
-	int direct=0;
+	
+        /*int direct=0;
 	if(mode==1){
 		direct=1;
 	}
@@ -170,11 +171,12 @@ int main (int argc, char * const argv[]){
 		printf("Wrong mode.\n");
 		return 1;
 	}
+         */
 	// Last argument 1 for direct 0 for overlap&save
 	if(target==0){
         printf("Entering CPU mode.\n");
 		intermediate_start= clock();
-		new_size=CPUconv(input1, SIGNAL_SIZE, filtersx, filterdx, FILTER_KERNEL_SIZE, outputsx, outputdx, direct);
+		new_size=CPUconv(input1, SIGNAL_SIZE, filtersx, filterdx, FILTER_KERNEL_SIZE, outputsx, outputdx, mode);
 		intermediate_end= clock();
 
         
@@ -182,13 +184,13 @@ int main (int argc, char * const argv[]){
 	else if(target==1){
 		printf("Entering GPU mode.\n");
 		intermediate_start= clock();
-		new_size=GPUconv(input1, SIGNAL_SIZE, filtersx, filterdx, FILTER_KERNEL_SIZE, outputsx, outputdx, direct);
+		new_size=GPUconv(input1, SIGNAL_SIZE, filtersx, filterdx, FILTER_KERNEL_SIZE, outputsx, outputdx, mode);
 		intermediate_end= clock();
 	}
 	else if(target==2){
 	intermediate_start= clock();
 		printf("Entering OpenCL mode.\n");
-		new_size=OCLconv(input1, SIGNAL_SIZE, filtersx, filterdx, FILTER_KERNEL_SIZE, outputsx, outputdx, direct, argv[0]);
+		new_size=OCLconv(input1, SIGNAL_SIZE, filtersx, filterdx, FILTER_KERNEL_SIZE, outputsx, outputdx, mode, argv[0]);
 		intermediate_end= clock();
 	}
 	else{

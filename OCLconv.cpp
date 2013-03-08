@@ -296,7 +296,7 @@ float OCLconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
     }
         //cl_platform_id platform_ids[16];
         //err= clGetPlatformIDs(sizeof(platform_ids), platform_ids, NULL);
-    err = clGetDeviceIDs(NULL, device_type, sizeof(device_ids), device_ids, &num_devices);
+    err = clGetDeviceIDs(NULL, CL_DEVICE_TYPE_ALL, sizeof(device_ids), device_ids, &num_devices);
         //printf("%d", err);
     if(err) 
     {       
