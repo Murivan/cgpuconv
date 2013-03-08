@@ -72,7 +72,7 @@ num2str(int num)
 }
 #ifdef _WIN32 || _WIN64
     // Calculates log2 of number.
-double Log2( double n )
+double log2( double n )
 {
         // log(n)/log(2) is log2.
     return log( n ) / log(double(2));

@@ -65,12 +65,12 @@ int main (int argc, char * const argv[]){
 	po::notify(vm);
     }
     
-    catch(boost::program_options::required_option& e)
+    catch(po::required_option& e)
     {
         std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
         return ERROR_IN_COMMAND_LINE;
     }
-    catch(boost::program_options::error& e)
+    catch(po::error& e)
     {
         std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
         return ERROR_IN_COMMAND_LINE;
