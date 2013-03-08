@@ -16,7 +16,7 @@ int main (int argc, char * const argv[]){
 	int          SIGNAL_SIZE, FILTER_KERNEL_SIZE;
 	int          chan1, chan2, sampleread;
     
-    int mode, target, azimuth, elevation;
+    int mode, target, azimuth, elevation, fftsize;
 	float distance;
     string oinfile, ooutput, oimpulse;
     char *leftfir, *rightfir;
@@ -40,6 +40,7 @@ int main (int argc, char * const argv[]){
     ("output,o", po::value<string>(&ooutput)->implicit_value(" "), "Output file path")
     ("mode,m", po::value<int>(&mode)->default_value(0), "0 for Overlap and Add or 1 for Direct.")
     ("target,t", po::value<int>(&target)->default_value(0), "0 for CPU, 1 for CUDA, or 2 for OpenCL.")
+    ("size,s", po::value<int>(&fftsize)->default_value(0), "Size of the FFT.")
     ("leftfir,l", po::value<char *>(&leftfir)->default_value(".\\HRTF\\sub1_L.wav"), "Left FIR path")
     ("rightfir,r", po::value<char *>(&rightfir)->default_value(".\\HRTF\\sub1_R.wav"), "Right FIR path")
     ("azimuth,a", po::value<int>(&azimuth)->default_value(0), "Azimuth")
@@ -85,7 +86,7 @@ int main (int argc, char * const argv[]){
 		return 1;
 	}
 	else {
-		cout << "Starting with these parameters: Mode "<< mode << ". Target"<< target <<".\n";
+		cout << "Starting with these parameters: Mode "<< mode << ". Target "<< target << ". FFT Size "<<fftsize<<".\n";
 	}
 
 //	if (argc!=6)
