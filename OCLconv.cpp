@@ -294,9 +294,9 @@ float OCLconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
         printf("Test only supported on DEVICE_TYPE_GPU\n");
         return -1;
     }
-        //cl_platform_id platform_ids[16];
-        //err= clGetPlatformIDs(sizeof(platform_ids), platform_ids, NULL);
-    err = clGetDeviceIDs(NULL, CL_DEVICE_TYPE_ALL, sizeof(device_ids), device_ids, &num_devices);
+    cl_platform_id platform_ids[16];
+    err= clGetPlatformIDs(sizeof(platform_ids), platform_ids, NULL);
+    err = clGetDeviceIDs(platform_ids[0], CL_DEVICE_TYPE_ALL, sizeof(device_ids), device_ids, &num_devices);
         //printf("%d", err);
     if(err) 
     {       
