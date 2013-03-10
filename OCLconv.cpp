@@ -161,6 +161,45 @@ char* shrFindFilePath(const char* filename, const char* executable_path)
     using namespace std;
         // Typical relative search paths to locate needed companion files (e.g. sample input data, or JIT source files)
         // The origin for the relative search may be the .exe file, a .bat file launching an .exe, a browser .exe launching the .exe or .bat, etc
+#ifdef _WIN32 || _WIN64
+    const char* searchPath[] =
+    {
+        ".\\",                                       // same dir
+        ".\\data\\",                                  // "\\data\\" subdir
+        ".\\src\\",                                   // "\\src\\" subdir
+        ".\\src\\<executable_name>\\data\\",            // "\\src\\<executable_name>\\data\\" subdir
+        ".\\inc\\",                                   // "\\inc\\" subdir
+        "..\\",                                      // up 1 in tree
+        "..\\data\\",                                 // up 1 in tree, "\\data\\" subdir
+        "..\\src\\",                                  // up 1 in tree, "\\src\\" subdir
+        "..\\inc\\",                                  // up 1 in tree, "\\inc\\" subdir
+        "..\\OpenCL\\src\\<executable_name>\\",         // up 1 in tree, "\\OpenCL\\src\\<executable_name>\\" subdir
+        "..\\OpenCL\\src\\<executable_name>\\data\\",    // up 1 in tree, "\\OpenCL\\src\\<executable_name>\\data\\" subdir
+        "..\\OpenCL\\src\\<executable_name>\\src\\",     // up 1 in tree, "\\OpenCL\\src\\<executable_name>\\src\\" subdir
+        "..\\OpenCL\\src\\<executable_name>\\inc\\",     // up 1 in tree, "\\OpenCL\\src\\<executable_name>\\inc\\" subdir
+        "..\\C\\src\\<executable_name>\\",              // up 1 in tree, "\\C\\src\\<executable_name>\\" subdir
+        "..\\C\\src\\<executable_name>\\data\\",         // up 1 in tree, "\\C\\src\\<executable_name>\\data\\" subdir
+        "..\\C\\src\\<executable_name>\\src\\",          // up 1 in tree, "\\C\\src\\<executable_name>\\src\\" subdir
+        "..\\C\\src\\<executable_name>\\inc\\",          // up 1 in tree, "\\C\\src\\<executable_name>\\inc\\" subdir
+        "..\\DirectCompute\\src\\<executable_name>\\",      // up 1 in tree, "\\DirectCompute\\src\\<executable_name>\\" subdir
+        "..\\DirectCompute\\src\\<executable_name>\\data\\", // up 1 in tree, "\\DirectCompute\\src\\<executable_name>\\data\\" subdir
+        "..\\DirectCompute\\src\\<executable_name>\\src\\",  // up 1 in tree, "\\DirectCompute\\src\\<executable_name>\\src\\" subdir
+        "..\\DirectCompute\\src\\<executable_name>\\inc\\",  // up 1 in tree, "\\DirectCompute\\src\\<executable_name>\\inc\\" subdir
+        "..\\..\\",                                   // up 2 in tree
+        "..\\..\\data\\",                              // up 2 in tree, "\\data\\" subdir
+        "..\\..\\src\\",                               // up 2 in tree, "\\src\\" subdir
+        "..\\..\\inc\\",                               // up 2 in tree, "\\inc\\" subdir
+        "..\\..\\..\\",                                // up 3 in tree
+        "..\\..\\..\\src\\<executable_name>\\",          // up 3 in tree, "\\src\\<executable_name>\\" subdir
+        "..\\..\\..\\src\\<executable_name>\\data\\",     // up 3 in tree, "\\src\\<executable_name>\\data\\" subdir
+        "..\\..\\..\\src\\<executable_name>\\src\\",      // up 3 in tree, "\\src\\<executable_name>\\src\\" subdir
+        "..\\..\\..\\src\\<executable_name>\\inc\\",      // up 3 in tree, "\\src\\<executable_name>\\inc\\" subdir
+        "..\\..\\..\\sandbox\\<executable_name>\\",      // up 3 in tree, "\\sandbox\\<executable_name>\\" subdir
+        "..\\..\\..\\sandbox\\<executable_name>\\data\\", // up 3 in tree, "\\sandbox\\<executable_name>\\data\\" subdir
+        "..\\..\\..\\sandbox\\<executable_name>\\src\\",  // up 3 in tree, "\\sandbox\\<executable_name>\\src\\" subdir
+        "..\\..\\..\\sandbox\\<executable_name>\\inc\\"   // up 3 in tree, "\\sandbox\\<executable_name>\\inc\\" subdir
+    };
+#else
     const char* searchPath[] =
     {
         "./",                                       // same dir
@@ -198,6 +237,7 @@ char* shrFindFilePath(const char* filename, const char* executable_path)
         "../../../sandbox/<executable_name>/src/",  // up 3 in tree, "/sandbox/<executable_name>/src/" subdir
         "../../../sandbox/<executable_name>/inc/"   // up 3 in tree, "/sandbox/<executable_name>/inc/" subdir
     };
+#endif
     
         // Extract the executable name
     string executable_name;
@@ -205,7 +245,7 @@ char* shrFindFilePath(const char* filename, const char* executable_path)
     {
         executable_name = string(executable_path);
         
-#ifdef _WIN32
+#ifdef _WIN32 || _WIN64
             // Windows path delimiter
         size_t delimiter_pos = executable_name.find_last_of('\\');
         executable_name.erase(0, delimiter_pos + 1);
