@@ -1,4 +1,4 @@
-# - Try to find Portaudio
+# - Try to find PortAudio
 # Once done this will define
 #
 #  PORTAUDIO_FOUND - system has Portaudio
@@ -104,4 +104,3 @@ else (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
   mark_as_advanced(PORTAUDIO_INCLUDE_DIRS PORTAUDIO_LIBRARIES)
 
 endif (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
-
