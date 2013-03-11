@@ -91,7 +91,7 @@ char* oclLoadProgSource(const char* cFilename, const char* cPreamble, size_t* sz
     size_t szSourceLength;
     
         // open the OpenCL source code file
-#ifdef _WIN32   // Windows version
+#ifdef _WIN32 || _WIN64   // Windows version
     if(fopen_s(&pFileStream, cFilename, "rb") != 0)
     {
         return NULL;
@@ -164,6 +164,7 @@ char* shrFindFilePath(const char* filename, const char* executable_path)
 #ifdef _WIN32 || _WIN64
     const char* searchPath[] =
     {
+        "",
         ".\\",                                       // same dir
         ".\\data\\",                                  // "\\data\\" subdir
         ".\\src\\",                                   // "\\src\\" subdir
@@ -293,7 +294,7 @@ char* shrFindFilePath(const char* filename, const char* executable_path)
                 // File found
                 // returning an allocated array here for backwards compatibility reasons
             char* file_path = (char*) malloc(path.length() + 1);
-#ifdef _WIN32
+#ifdef _WIN32 || _WIN64
             strcpy_s(file_path, path.length() + 1, path.c_str());
 #else
             strcpy(file_path, path.c_str());
