@@ -24,6 +24,7 @@ FILE (GLOB sources
 FIND_PACKAGE(CUDA REQUIRED)
 if(CUDA_FOUND)
 CUDA_ADD_EXECUTABLE(GPUconv GPUconv.cu)
+INCLUDE_DIRECTORIES(${CUDA_SDK_ROOT_DIR}/samples/common/inc)
 else(CUDA_FOUND)
     message("CUDA is not installed on this system.")
 endif()
