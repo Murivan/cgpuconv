@@ -13,9 +13,9 @@ set(CMAKE_MODULE_PATH "${cgpuconv_SOURCE_DIR}/cmake")
 include_directories(  ${CMAKE_CURRENT_SOURCE_DIR} )
 
 FILE (GLOB sources
-		${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-		${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
     )
 
 
@@ -23,14 +23,15 @@ FILE (GLOB sources
 #Support for CUDA Integration
 FIND_PACKAGE(CUDA REQUIRED)
 if(CUDA_FOUND)
-CUDA_ADD_EXECUTABLE(GPUconv GPUconv.cu)
 INCLUDE_DIRECTORIES(${CUDA_SDK_ROOT_DIR}/samples/common/inc)
+INCLUDE_DIRECTORIES(/Developer/NVIDIA/CUDA-5.0/samples/common/inc)
+
 else(CUDA_FOUND)
     message("CUDA is not installed on this system.")
 endif()
 
 
-FIND_PACKAGE(Boost REQUIRED)
+FIND_PACKAGE(Boost REQUIRED program_options)
 IF (Boost_FOUND)
 	INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR})
 	#LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS})
@@ -48,8 +49,19 @@ IF (SNDFILE_FOUND)
 	#LINK_DIRECTORIES(${SNDFILE_LIBRARY_DIRS})
 ENDIF()
 
+FIND_PACKAGE(FFTW REQUIRED)
+IF (FFTW_FOUND)
+	INCLUDE_DIRECTORIES(${FFTW_INCLUDE_DIR})
+	#LINK_DIRECTORIES(${FFTW_LIBRARY_DIRS})
+ENDIF()
+
+FIND_PACKAGE(OpenCL REQUIRED)
+IF (OpenCL_FOUND)
+	INCLUDE_DIRECTORIES(${OPENCL_INCLUDE_DIR})
+	#LINK_DIRECTORIES(${OPENCL_LIBRARY_DIRS})
+ENDIF()
 
 
-add_executable(cgpuconv cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
+CUDA_ADD_EXECUTABLE(cgpuconv GPUconv.cu cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
 
-target_link_libraries(cgpuconv ${Boost_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${SNDFILE_LIBRARIES})
+target_link_libraries(cgpuconv ${CUDA_CUDA_LIBRARY} ${CUDA_cufft_LIBRARY} ${Boost_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${SNDFILE_LIBRARIES} ${FFTW_LIBRARIES} ${OPENCL_LIBRARIES})
