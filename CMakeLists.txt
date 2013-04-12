@@ -10,11 +10,11 @@ ENDIF(UNIX)
 # additional CMake modules
 set(CMAKE_MODULE_PATH "${cgpuconv_SOURCE_DIR}/cmake")
 
-include_directories(  ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 FILE (GLOB sources
-		${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/*.cu
+		${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/*.c
 		${CMAKE_CURRENT_SOURCE_DIR}/*.h
 		${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
@@ -33,7 +33,7 @@ else(CUDA_FOUND)
 endif()
 
 
-FIND_PACKAGE(Boost REQUIRED)
+FIND_PACKAGE(Boost REQUIRED program_options)
 IF (Boost_FOUND)
 	INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR})
 	#LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS})
@@ -64,6 +64,6 @@ IF (OpenCL_FOUND)
 ENDIF()
 
 
-CUDA_ADD_EXECUTABLE(${MODULE_NAME} ${sources})
+CUDA_ADD_EXECUTABLE(${MODULE_NAME} GPUconv.cu cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
 
-target_link_libraries(cgpuconv ${CUDA_CUDA_LIBRARY} ${CUDA_cufft_LIBRARY} ${Boost_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${SNDFILE_LIBRARIES} ${FFTW_LIBRARIES} ${OPENCL_LIBRARIES})
+target_link_libraries(${MODULE_NAME} ${CUDA_CUDA_LIBRARY} ${CUDA_cufft_LIBRARY} ${Boost_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${SNDFILE_LIBRARIES} ${FFTW_LIBRARIES} ${OPENCL_LIBRARIES})
