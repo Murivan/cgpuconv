@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 
-SET ( MODULE_NAME cgpuconv )
-project( ${MODULE_NAME} )
+SET (MODULE_NAME cgpuconv)
+project(${MODULE_NAME})
 
 IF(UNIX)
   set ( CMAKE_CXX_FLAGS "-Wno-write-strings")
@@ -14,6 +14,8 @@ include_directories(  ${CMAKE_CURRENT_SOURCE_DIR} )
 
 FILE (GLOB sources
 		${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/*.cu
+		${CMAKE_CURRENT_SOURCE_DIR}/*.c
 		${CMAKE_CURRENT_SOURCE_DIR}/*.h
 		${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
     )
@@ -62,6 +64,6 @@ IF (OpenCL_FOUND)
 ENDIF()
 
 
-CUDA_ADD_EXECUTABLE(cgpuconv GPUconv.cu cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
+CUDA_ADD_EXECUTABLE(${MODULE_NAME} ${sources})
 
 target_link_libraries(cgpuconv ${CUDA_CUDA_LIBRARY} ${CUDA_cufft_LIBRARY} ${Boost_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${SNDFILE_LIBRARIES} ${FFTW_LIBRARIES} ${OPENCL_LIBRARIES})
