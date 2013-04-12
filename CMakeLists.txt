@@ -64,6 +64,6 @@ IF (OpenCL_FOUND)
 ENDIF()
 
 
-CUDA_ADD_EXECUTABLE(${MODULE_NAME} GPUconv.cu cgpuconv.cpp CPUconv.cpp OCLconv.cpp fft_execute.cpp fft_kernelstring.cpp fft_setup.cpp)
+CUDA_ADD_EXECUTABLE(${MODULE_NAME} ${sources})
 
 target_link_libraries(${MODULE_NAME} ${CUDA_CUDA_LIBRARY} ${CUDA_cufft_LIBRARY} ${Boost_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${SNDFILE_LIBRARIES} ${FFTW_LIBRARIES} ${OPENCL_LIBRARIES})
