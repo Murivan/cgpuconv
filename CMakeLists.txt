@@ -26,7 +26,7 @@ FILE (GLOB sources
 FIND_PACKAGE(CUDA REQUIRED)
 if(CUDA_FOUND)
 INCLUDE_DIRECTORIES(${CUDA_SDK_ROOT_DIR}/samples/common/inc)
-INCLUDE_DIRECTORIES(/Developer/NVIDIA/CUDA-5.0/samples/common/inc)
+INCLUDE_DIRECTORIES(/Developer/NVIDIA/CUDA-6.0/samples/common/inc)
 
 else(CUDA_FOUND)
     message("CUDA is not installed on this system.")
@@ -36,7 +36,7 @@ endif()
 FIND_PACKAGE(Boost REQUIRED program_options)
 IF (Boost_FOUND)
 	INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR})
-	#LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS})
+	LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS})
 ENDIF()
 
 FIND_PACKAGE(PortAudio REQUIRED)

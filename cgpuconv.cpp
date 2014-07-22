@@ -19,7 +19,7 @@ int main (int argc, char * const argv[]){
     int mode, target, azimuth, elevation, fftsize;
 	float distance;
     string oinfile, ooutput, oimpulse;
-    char *leftfir, *rightfir;
+    string leftfir, rightfir;
 
 
         // Declare a group of options that will be
@@ -41,8 +41,8 @@ int main (int argc, char * const argv[]){
     ("mode,m", po::value<int>(&mode)->default_value(0), "0 for Overlap and Add or 1 for Direct.")
     ("target,t", po::value<int>(&target)->default_value(0), "0 for CPU, 1 for CUDA, or 2 for OpenCL.")
     ("size,s", po::value<int>(&fftsize)->default_value(0), "Size of the FFT.")
-    ("leftfir,l", po::value<char *>(&leftfir)->default_value(".\\HRTF\\sub1_L.wav"), "Left FIR path")
-    ("rightfir,r", po::value<char *>(&rightfir)->default_value(".\\HRTF\\sub1_R.wav"), "Right FIR path")
+    ("leftfir,l", po::value<string>(&leftfir)->default_value(".\\HRTF\\sub1_L.wav"), "Left FIR path")
+    ("rightfir,r", po::value<string>(&rightfir)->default_value(".\\HRTF\\sub1_R.wav"), "Right FIR path")
     ("azimuth,a", po::value<int>(&azimuth)->default_value(0), "Azimuth")
     ("elevation,e", po::value<int>(&elevation)->default_value(0), "Elevation")
     ("distance,d", po::value<float>(&distance)->default_value(1.0), "Distance")
