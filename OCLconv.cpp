@@ -91,7 +91,7 @@ char* oclLoadProgSource(const char* cFilename, const char* cPreamble, size_t* sz
     size_t szSourceLength;
     
         // open the OpenCL source code file
-#ifdef _WIN32 || _WIN64   // Windows version
+  #if defined(_WIN32) || defined(_WIN64)  // Windows version
     if(fopen_s(&pFileStream, cFilename, "rb") != 0)
     {
         return NULL;
@@ -161,7 +161,7 @@ char* shrFindFilePath(const char* filename, const char* executable_path)
     using namespace std;
         // Typical relative search paths to locate needed companion files (e.g. sample input data, or JIT source files)
         // The origin for the relative search may be the .exe file, a .bat file launching an .exe, a browser .exe launching the .exe or .bat, etc
-#ifdef _WIN32 || _WIN64
+  #if defined(_WIN32) || defined(_WIN64)
     const char* searchPath[] =
     {
         "",
@@ -246,7 +246,7 @@ char* shrFindFilePath(const char* filename, const char* executable_path)
     {
         executable_name = string(executable_path);
         
-#ifdef _WIN32 || _WIN64
+  #if defined(_WIN32) || defined(_WIN64)
             // Windows path delimiter
         size_t delimiter_pos = executable_name.find_last_of('\\');
         executable_name.erase(0, delimiter_pos + 1);
@@ -294,7 +294,7 @@ char* shrFindFilePath(const char* filename, const char* executable_path)
                 // File found
                 // returning an allocated array here for backwards compatibility reasons
             char* file_path = (char*) malloc(path.length() + 1);
-#ifdef _WIN32 || _WIN64
+  #if defined(_WIN32) || defined(_WIN64)
             strcpy_s(file_path, path.length() + 1, path.c_str());
 #else
             strcpy(file_path, path.c_str());
@@ -470,7 +470,7 @@ float OCLconv(float* input, int SIGNAL_SIZE, float* filtersx, float* filterdx, i
     //printf("%d , %d.\n",proposed_length, agreed_length);
     n.x=pow2_length;
 	int length = n.x * n.y * n.z * batchSize;
-  #ifdef _WIN32 || _WIN64
+  #if defined(_WIN32) || defined(_WIN64)
             //Host Memory
         clFFT_SplitComplex data_input_split;
         clFFT_SplitComplex data_filsx_split;
@@ -682,8 +682,8 @@ if(direct==0){
 	//Create PLAN
 	plan = clFFT_CreatePlan(context, n, clFFT_1D, clFFT_SplitComplexFormat, &err );
 	
-      #ifdef _WIN32 || _WIN64
-    	//Host Memory
+  #if defined(_WIN32) || defined(_WIN64)
+  //Host Memory
 	clFFT_SplitComplex data_filsx_split;
 	clFFT_SplitComplex data_fildx_split;
 	clFFT_SplitComplex data_input_split;
@@ -771,8 +771,8 @@ if(direct==0){
 	for(int k=0; k<SIGNAL_SIZE; (k+=(length-FILTER_KERNEL_SIZE))){
 		//Declare
         
-              #ifdef _WIN32 || _WIN64
-        
+  #if defined(_WIN32) || defined(_WIN64)
+  
 		clFFT_SplitComplex data_input_split;
         clFFT_SplitComplex data_outputsx_split;
 		clFFT_SplitComplex data_outputdx_split;

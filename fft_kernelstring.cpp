@@ -70,7 +70,7 @@ num2str(int num)
 	sprintf(temp, "%d", num);
 	return string(temp);
 }
-#ifdef _WIN32 || _WIN64
+  #if defined(_WIN32) || defined(_WIN64)
     // Calculates log2 of number.
 double log2( double n )
 {
